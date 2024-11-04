@@ -1,0 +1,36 @@
+---
+- name: Verify
+  hosts: all
+  pre_tasks:
+    - name: Get Frigate container info
+      community.docker.docker_container_info:
+        name: frigate
+      register: container_info
+
+    - name: Parse Frigate container IP
+      ansible.builtin.set_fact:
+        frigate_container_ip: "{{ container_info.container.NetworkSettings.Networks.values() | map(attribute='IPAddress') | list | first }}"
+
+  tasks:
+    - name: Assert Frigate is healthy
+      ansible.builtin.assert:
+        that: container_info.container.State.Health.Status == 'healthy'
+        success_msg: Frigate container passed health check.
+
+    - name: Assert Frigate has IP
+      ansible.builtin.assert:
+        that: frigate_container_ip | string | length > 0
+
+    - name: Verify Frigate responds to API request
+      ansible.builtin.uri:
+        url: http://{{ frigate_container_ip }}:5000/api/version
+        return_content: true
+      failed_when: false
+      register: frigate_api_response
+
+    - name: Assert Frigate responds to API request
+      ansible.builtin.assert:
+        that: frigate_api_response.status == 200
+        success_msg: >-
+          Frigate API 'version' endpoint query succeeded with response:
+          {{ frigate_api_response.content }}

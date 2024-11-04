@@ -1,0 +1,10 @@
+---
+
+frigate_docker_ports_configured: >-
+  {{
+    [frigate_docker_ports.web_ui.port ~ ':8971'] if frigate_docker_ports.web_ui.expose else [] +
+    [frigate_docker_ports.web_ui_unauth.port ~ ':5000'] if frigate_docker_ports.web_ui_unauth.expose else [] +
+    [frigate_docker_ports.rtsp.port ~ ':8554'] if frigate_docker_ports.rtsp.expose else [] +
+    [frigate_docker_ports.webrtc_tcp.port ~ ':8555/tcp'] if frigate_docker_ports.webrtc_tcp.expose else [] +
+    [frigate_docker_ports.webrtc_udp.port ~ ':8555/udp'] if frigate_docker_ports.webrtc_udp.expose else []
+  }}

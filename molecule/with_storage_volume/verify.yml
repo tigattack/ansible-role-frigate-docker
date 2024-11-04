@@ -1,0 +1,28 @@
+---
+- name: Verify
+  hosts: all
+  pre_tasks:
+    - name: Get Frigate container info
+      community.docker.docker_container_info:
+        name: frigate
+      register: container_info
+
+    - name: Get Frigate storage volume info
+      community.docker.docker_volume_info:
+        name: frigate_storage
+      register: storage_volume_info
+
+  tasks:
+    - name: Assert Frigate storage volume exists
+      ansible.builtin.assert:
+        that: storage_volume_info.exists
+        success_msg: Frigate storage volume exists
+
+    - name: Assert Frigate is using the correct storage volume
+      ansible.builtin.assert:
+        that: >-
+          container_info.container.Mounts
+          | selectattr('Type', 'equalto', 'volume')
+          | selectattr('Name', 'equalto', 'frigate_storage')
+          | length > 0
+        success_msg: Frigate is using the correct storage volume

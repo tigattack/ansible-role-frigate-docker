@@ -1,0 +1,10 @@
+---
+
+- name: Restart Frigate
+  community.docker.docker_container:
+    name: "{{ frigate_docker_container_name }}"
+    restart: true
+    state: started
+    comparisons:
+      '*': ignore
+  when: deploy_frigate_container is not changed

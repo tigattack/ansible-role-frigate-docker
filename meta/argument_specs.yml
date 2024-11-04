@@ -1,0 +1,215 @@
+---
+argument_specs:
+  main:
+    short_description: Deploy Frigate in a Docker container
+    description:
+      - This role will deploy Frigate in a Docker container.
+      - 'Prerequisites:'
+      - '  - Docker'
+      - '  - Chosen data and recording storage paths on the host'
+    version_added: '1.0.0'
+    author: tigattack
+    options:
+      frigate_docker_container_name:
+        type: str
+        default: frigate
+        description: Frigate container's name.
+
+      frigate_docker_version:
+        type: str
+        default: stable
+        description:
+          - Frigate Docker image version (tag).
+          - Can be 'stable' or any other valid image tag (e.g. 'stable-tensorrt', '0.14.0', etc).
+          - See more at https://docs.frigate.video/frigate/installation#docker
+
+      frigate_docker_data_bind_path:
+        type: path
+        default: /opt/<frigate_docker_container_name>
+        description: Frigate data path on the host.
+
+      frigate_docker_storage_bind_path:
+        type: path
+        default: /opt/<frigate_docker_container_name>_storage
+        description:
+          - Frigate storage path on the host.
+          - Mutually exclusive with all other 'frigate_docker_storage_*' variables.
+          - Only used if 'frigate_docker_storage_use_docker_volume' is false (default).
+
+      frigate_docker_storage_use_docker_volume:
+        type: bool
+        default: false
+        description:
+          - Use a Docker volume for Frigate storage, as opposed to a bind mount.
+          - This and the 'frigate_docker_storage_volume' variable are mutually exclusive with the 'frigate_docker_storage_bind_path' variable.
+          - If this variable is set to 'true', 'frigate_docker_storage_bind_path' will be ignored.
+
+      frigate_docker_storage_volume:
+        type: dict
+        required: false
+        default:
+          name: frigate_storage
+          driver: local
+          driver_options: {}
+        description:
+          - Dictionary of settings for the Frigate storage Docker volume.
+          - A Docker volume defined in this variable will only be used if 'frigate_docker_storage_use_docker_volume' is 'true'.
+          - For more information, see https://docs.ansible.com/ansible/latest/collections/community/docker/docker_volume_module.html
+        options:
+          name:
+            type: str
+            required: false
+            description: Docker volume name.
+            default: frigate_storage
+
+          driver:
+            type: str
+            required: false
+            description: Docker volume driver.
+            default: local
+
+          driver_options:
+            type: dict
+            required: false
+            description: Docker volume driver options.
+            default: {}
+
+      frigate_docker_tmpfs_volume:
+        type: dict
+        required: false
+        default:
+          target: /tmp/cache
+          size: 1000000000
+        description: Frigate tmpfs volume.
+        options:
+          target:
+            type: path
+            default: /tmp/cache
+            description: Frigate tmpfs volume target.
+          size:
+            type: int
+            default: 1000000000
+            description: Frigate tmpfs volume size.
+
+      frigate_docker_shm_size:
+        type: str
+        default: 64M
+        description:
+          - Frigate shm size.
+          - See https://docs.frigate.video/frigate/installation#calculating-required-shm-size
+
+      frigate_docker_devices:
+        type: list
+        elements: str
+        default: []
+        description: Device paths to bind to the Frigate container.
+
+      frigate_docker_ports:
+        type: dict
+        required: false
+        default:
+          web_ui:
+            expose: true
+            port: 8971
+          web_ui_unauth:
+            expose: false
+            port: 5000
+          rtsp:
+            expose: true
+            port: 8554
+          webrtc_tcp:
+            expose: true
+            port: 8555
+          webrtc_udp:
+            expose: true
+            port: 8555
+        description: Frigate ports to expose.
+        options:
+          web_ui:
+            type: dict
+            required: false
+            description: Frigate web UI port.
+            options:
+              expose:
+                type: bool
+                default: true
+                description: Expose Frigate's web UI port.
+              port:
+                type: int
+                default: 8971
+                description: Frigate web UI port.
+
+          web_ui_unauth:
+            type: dict
+            required: false
+            description: Frigate unauthenticated web UI port.
+            options:
+              expose:
+                type: bool
+                default: false
+                description: Expose Frigate's unauthenticated web UI port.
+              port:
+                type: int
+                default: 5000
+                description: Frigate unauthenticated web UI port.
+
+          rtsp:
+            type: dict
+            required: false
+            description: Frigate RTSP port.
+            options:
+              expose:
+                type: bool
+                default: true
+                description: Expose Frigate's RTSP port.
+              port:
+                type: int
+                default: 8554
+                description: Frigate RTSP port.
+
+          webrtc_tcp:
+            type: dict
+            required: false
+            description: Frigate WebRTC TCP port.
+            options:
+              expose:
+                type: bool
+                default: true
+                description: Expose Frigate's WebRTC TCP port.
+              port:
+                type: int
+                default: 8555
+                description: Frigate WebRTC TCP port.
+
+          webrtc_udp:
+            type: dict
+            required: false
+            description: Frigate WebRTC UDP port.
+            options:
+              expose:
+                type: bool
+                default: true
+                description: Expose Frigate's WebRTC UDP port.
+              port:
+                type: int
+                default: 8556
+                description: Frigate WebRTC UDP port.
+
+      frigate_docker_container_network:
+        type: str
+        default: bridge
+        description:
+          - Name of the Docker network to connect the Frigate container to.
+          - The default Docker container network ('bridge') is used by default.
+
+      frigate_docker_env_vars:
+        type: dict
+        default: {}
+        description: Environment variables to pass to the Frigate container.
+
+      frigate_docker_config:
+        type: dict
+        default: {}
+        description:
+          - Frigate configuration.
+          - The contents of this variable will be copied into Frigate's config file.

@@ -1,0 +1,112 @@
+---
+
+- name: Frigate storage Docker volume
+  when: frigate_docker_storage_use_docker_volume
+  block:
+    - name: Check if Frigate storage Docker volume would change
+      community.docker.docker_volume:
+        name: "{{ frigate_docker_storage_volume.name }}"
+        driver: "{{ frigate_docker_storage_volume.driver }}"
+        driver_options: "{{ frigate_docker_storage_volume.driver_options }}"
+        recreate: options-changed
+        state: present
+      register: storage_volume_check
+      check_mode: true
+      no_log: true
+
+    - name: Change Frigate storage Docker volume
+      when: storage_volume_check is changed # noqa no-handler
+      block:
+        - name: Get Frigate container info
+          community.docker.docker_container_info:
+            name: "{{ frigate_docker_container_name }}"
+          register: frigate_container_info
+
+        - name: Stop Frigate container
+          community.docker.docker_container:
+            name: "{{ frigate_docker_container_name }}"
+            state: stopped
+          when: frigate_container_info.exists
+
+        - name: Ensure Frigate storage Docker volume
+          community.docker.docker_volume:
+            name: "{{ frigate_docker_storage_volume.name }}"
+            driver: "{{ frigate_docker_storage_volume.driver }}"
+            driver_options: "{{ frigate_docker_storage_volume.driver_options }}"
+            recreate: options-changed
+            state: present
+
+- name: Frigate Docker network
+  block:
+    - name: Check if Frigate Docker network exists
+      community.docker.docker_network_info:
+        name: "{{ frigate_docker_container_network }}"
+      register: docker_network_check
+
+    - name: Create Frigate Docker network
+      community.docker.docker_network:
+        name: "{{ frigate_docker_container_network }}"
+        state: present
+      when: not docker_network_check.exists
+
+- name: Deploy Frigate container
+  community.docker.docker_container:
+    name: "{{ frigate_docker_container_name }}"
+    image: ghcr.io/blakeblackshear/frigate:{{ frigate_docker_version }}
+    restart_policy: unless-stopped
+    privileged: true
+    shm_size: "{{ frigate_docker_shm_size }}"
+    devices: "{{ frigate_docker_devices }}"
+    networks: >-
+      {{
+        [{'name': frigate_docker_container_network}]
+        if frigate_docker_container_network | string | length > 0
+        else omit
+      }}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ frigate_docker_data_bind_path }}:/config"
+      - "{{ frigate_docker_storage_volume.name if frigate_docker_storage_use_docker_volume else frigate_docker_storage_bind_path }}:/media/frigate"
+      - type: tmpfs
+        target: "{{ frigate_docker_tmpfs_volume.target }}"
+        tmpfs:
+          size: "{{ frigate_docker_tmpfs_volume.size }}"
+    ports: "{{ frigate_docker_ports_configured }}"
+    env: "{{ frigate_docker_env_vars }}"
+    state: healthy
+  register: deploy_frigate_container
+
+- name: Manage config
+  when:
+    - frigate_docker_config is defined
+    - frigate_docker_config != {}
+    - frigate_docker_config is not none
+  block:
+    - name: Get Frigate config
+      ansible.builtin.slurp:
+        path: "{{ frigate_docker_data_bind_path }}/config.yaml"
+      register: current_frigate_config
+
+    - name: Parse version from config
+      ansible.builtin.set_fact:
+        frigate_config_version: >-
+          {{ (current_frigate_config.content | b64decode | from_yaml).version }}
+
+    - name: Template Frigate config
+      ansible.builtin.template:
+        src: frigate_config.yml.j2
+        dest: "{{ frigate_docker_data_bind_path }}/config.yaml"
+        owner: root
+        group: root
+        mode: '0644'
+        validate: >-
+          docker run
+            --rm
+            -v %s:/config/config.yml
+            --entrypoint python3
+            ghcr.io/blakeblackshear/frigate:{{ frigate_docker_version }}
+            -u -m frigate
+            --validate-config
+      vars:
+        frigate_app_version: "{{ frigate_config_version }}"
+      notify: Restart Frigate

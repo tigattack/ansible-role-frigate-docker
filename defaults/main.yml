@@ -1,0 +1,75 @@
+---
+
+frigate_docker_container_name: frigate
+
+frigate_docker_version: stable
+
+frigate_docker_data_bind_path: "{{ ['/opt', frigate_docker_container_name] | path_join }}"
+
+# Mutually exclusive with all other 'frigate_docker_storage_' variables.
+# Only used if frigate_docker_storage_use_docker_volume is false.
+frigate_docker_storage_bind_path: "{{ ['/opt', frigate_docker_container_name ~ '_storage'] | path_join }}"
+
+frigate_docker_storage_use_docker_volume: false
+# See https://docs.ansible.com/ansible/latest/collections/community/docker/docker_volume_module.html
+frigate_docker_storage_volume:
+  name: frigate_storage
+  driver: local
+  driver_options: {}
+
+frigate_docker_tmpfs_volume:
+  target: /tmp/cache
+  size: 1000000000
+
+# https://docs.frigate.video/frigate/installation#calculating-required-shm-size
+frigate_docker_shm_size: 64M
+
+# Use this to bind a GPU.
+# Example:
+# frigate_docker_devices:
+#   - "/dev/dri/renderD128:/dev/dri/renderD128"
+frigate_docker_devices: []
+
+frigate_docker_ports:
+  web_ui:
+    expose: true
+    port: 8971
+  web_ui_unauth:
+    expose: false
+    port: 5000
+  rtsp:
+    expose: true
+    port: 8554
+  webrtc_tcp:
+    expose: true
+    port: 8555
+  webrtc_udp:
+    expose: true
+    port: 8555
+
+frigate_docker_container_network: bridge
+
+# Example:
+# frigate_docker_env_vars:
+#   frigate_docker_RTSP_PASSWORD: "password"
+frigate_docker_env_vars: {}
+
+# Config will not be managed by Ansible unless frigate_docker_config is set by user.
+# Example:
+# frigate_docker_config:
+#   mqtt:
+#     enabled: false
+
+#   cameras:
+#     name_of_your_camera: # <------ Name the camera
+#       enabled: true
+#       ffmpeg:
+#         inputs:
+#           - path: rtsp://10.0.10.10:554/rtsp # <----- The stream you want to use for detection
+#             roles:
+#               - detect
+#       detect:
+#         enabled: false # <---- disable detection until you have a working camera feed
+#         width: 1280
+#         height: 720
+frigate_docker_config: {}

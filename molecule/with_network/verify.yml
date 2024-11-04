@@ -1,0 +1,24 @@
+---
+- name: Verify
+  hosts: all
+  pre_tasks:
+    - name: Get Frigate container info
+      community.docker.docker_container_info:
+        name: frigate
+      register: container_info
+
+    - name: Get Frigate network info
+      community.docker.docker_network_info:
+        name: foo
+      register: network_info
+
+  tasks:
+    - name: Assert Frigate network exists
+      ansible.builtin.assert:
+        that: network_info.exists
+        success_msg: Frigate network exists
+
+    - name: Assert Frigate is using the correct network
+      ansible.builtin.assert:
+        that: container_info.container.HostConfig.NetworkMode == network_info.network.Name
+        success_msg: Frigate is using the correct network

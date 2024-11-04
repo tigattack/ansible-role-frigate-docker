@@ -1,0 +1,5 @@
+{{ ansible_managed | comment }}
+
+version: {{ frigate_app_version }}
+
+{{ frigate_docker_config | to_nice_yaml(sort_keys=false, indent=2) }}
