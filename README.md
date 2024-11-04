@@ -3,7 +3,7 @@
 [![Build Status][build_badge]][build_link]
 [![Ansible Galaxy][galaxy_badge]][galaxy_link]
 
-Deploy [Frigate](https://frigate.video/) in a Docker container.
+Deploy [Frigate NVR](https://frigate.video/) in a Docker container.
 
 Install the role: `ansible-galaxy role install tigattack.frigate_docker`
 
