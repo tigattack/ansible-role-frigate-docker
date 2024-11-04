@@ -7,6 +7,8 @@ Deploy [Frigate](https://frigate.video/) in a Docker container.
 
 Install the role: `ansible-galaxy role install tigattack.frigate_docker`
 
+See [Example Playbooks](#example-playbooks) below.
+
 ## Prerequisites
 
 * [community.docker](https://galaxy.ansible.com/ui/repo/published/community/docker/) Ansible collection. See [requirements.yml](requirements.yml).
