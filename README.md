@@ -48,8 +48,8 @@ Frigate data path on the host.
 By default, this is set to `/opt/` followed by the name of the container.
 
 For example:
-* If both [`frigate_docker_container_name`](#frigate_docker_container_name) and `frigate_docker_data_bind_path` are left default, the path would be `/opt/frigate`.
-* If [`frigate_docker_container_name`](#frigate_docker_container_name) is set to `foo_bar` and `frigate_docker_data_bind_path` is left default, the path would be `/opt/foo_bar`.
+* If both [`frigate_docker_container_name`](#frigate_docker_container_name) and this variable are left default, the path would be `/opt/frigate`.
+* If [`frigate_docker_container_name`](#frigate_docker_container_name) is set to `foo_bar` and this variable is left default, the path would be `/opt/foo_bar`.
 
 ### `frigate_docker_storage_bind_path`
 
@@ -58,15 +58,15 @@ For example:
 | path | `/opt/<frigate_docker_container_name>_storage`|
 
 > [!WARNING]
-> This is mutually exclusive with all other `frigate_docker_storage_*` variables and will only be used if `frigate_docker_storage_use_docker_volume` is `false` (default).
+> This is mutually exclusive with all other `frigate_docker_storage_*` variables and will only be used if [`frigate_docker_storage_use_docker_volume`](#frigate_docker_storage_use_docker_volume) is `false` (default).
 
-Path to Frigate storage (for recordings etc.) on the host. Only used if `frigate_docker_storage_use_docker_volume` is `false`.
+Path to Frigate storage (for recordings etc.) on the host.
 
 By default, this is set to `/opt/` followed by the name of the container, suffixed with `_storage`.
 
 For example:
-* If both [`frigate_docker_container_name`](#frigate_docker_container_name) and `frigate_docker_storage_bind_path` are left default, the path would be `/opt/frigate_storage`.
-* If [`frigate_docker_container_name`](#frigate_docker_container_name) is set to `foo_bar` and `frigate_docker_storage_bind_path` is left default, the path would be `/opt/foo_bar`.
+* If both [`frigate_docker_container_name`](#frigate_docker_container_name) and this variable are left default, the path would be `/opt/frigate_storage`.
+* If [`frigate_docker_container_name`](#frigate_docker_container_name) is set to `foo_bar` and this variable is left default, the path would be `/opt/foo_bar`.
 
 ### `frigate_docker_storage_use_docker_volume`
 
@@ -75,8 +75,7 @@ For example:
 | bool   | `false` |
 
 > [!WARNING]
-> This and the `frigate_docker_storage_volume` variable are mutually exclusive with the `frigate_docker_storage_bind_path` variable.
-> If this variable is set to `true`, `frigate_docker_storage_bind_path` will be ignored.
+> This and the [`frigate_docker_storage_volume`](#frigate_docker_storage_volume) variable are mutually exclusive with the [`frigate_docker_storage_bind_path`](#frigate_docker_storage_bind_path) variable.
 
 Use a Docker volume for Frigate storage (for recordings etc.), instead of a bind mount.
 
@@ -87,7 +86,7 @@ Use a Docker volume for Frigate storage (for recordings etc.), instead of a bind
 | `dict[str, str\|dict]` | See below |
 
 > [!NOTE]
-> A Docker volume defined in this variable will only be used if `frigate_docker_storage_use_docker_volume` is `true`.
+> A Docker volume defined in this variable will only be used if [`frigate_docker_storage_use_docker_volume`](#frigate_docker_storage_use_docker_volume) is `true`.
 
 Dictionary of settings for the Frigate storage Docker volume.
 
