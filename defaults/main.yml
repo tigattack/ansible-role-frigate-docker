@@ -56,6 +56,11 @@ frigate_docker_env_vars: {}
 
 frigate_docker_privileged: false
 
+# Example:
+# frigate_docker_capabilities:
+#   - CAP_PERFMON
+frigate_docker_capabilities: []
+
 # Config will not be managed by Ansible unless frigate_docker_config is set by user.
 # Example:
 # frigate_docker_config:

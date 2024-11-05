@@ -227,6 +227,14 @@ Run the Frigate container in privileged mode. Sometimes useful for granting nece
 
 See the relevant section of the [Frigate documentation](https://docs.frigate.video) for your platform for more information.
 
+### `frigate_docker_capabilities`
+
+| Type        | Default |
+|-------------|---------|
+| `list[str]` | `[]`    |
+
+Capabilities to add to the Frigate container, such as [`CAP_PERFMON` for Intel GPU stats](https://docs.frigate.video/configuration/hardware_acceleration/#configuring-intel-gpu-stats-in-docker).
+
 ### `frigate_docker_config`
 
 | Type   | Default |

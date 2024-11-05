@@ -57,6 +57,7 @@
     image: ghcr.io/blakeblackshear/frigate:{{ frigate_docker_version }}
     restart_policy: unless-stopped
     privileged: "{{ frigate_docker_privileged }}"
+    capabilities: "{{ frigate_docker_capabilities }}"
     shm_size: "{{ frigate_docker_shm_size }}"
     devices: "{{ frigate_docker_devices }}"
     networks: >-

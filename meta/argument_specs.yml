@@ -212,6 +212,12 @@ argument_specs:
         default: false
         description: Run the Frigate container in privileged mode.
 
+      frigate_docker_capabilities:
+        type: list
+        elements: str
+        default: []
+        description: Capabilities to add to the Frigate container.
+
       frigate_docker_config:
         type: dict
         default: {}
