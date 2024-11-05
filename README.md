@@ -217,6 +217,16 @@ Name of the Docker network to connect the Frigate container to. The default Dock
 
 Environment variables to pass to the Frigate container. Empty dictionary (no env vars) by default.
 
+### `frigate_docker_privileged`
+
+| Type   | Default |
+|--------|---------|
+| bool   | `false` |
+
+Run the Frigate container in privileged mode. Sometimes useful for granting necessary privileges to various hardware devices, but rarely strictly required.
+
+See the relevant section of the [Frigate documentation](https://docs.frigate.video) for your platform for more information.
+
 ### `frigate_docker_config`
 
 | Type   | Default |

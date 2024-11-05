@@ -54,6 +54,8 @@ frigate_docker_container_network: bridge
 #   frigate_docker_RTSP_PASSWORD: "password"
 frigate_docker_env_vars: {}
 
+frigate_docker_privileged: false
+
 # Config will not be managed by Ansible unless frigate_docker_config is set by user.
 # Example:
 # frigate_docker_config:

@@ -207,6 +207,11 @@ argument_specs:
         default: {}
         description: Environment variables to pass to the Frigate container.
 
+      frigate_docker_privileged:
+        type: bool
+        default: false
+        description: Run the Frigate container in privileged mode.
+
       frigate_docker_config:
         type: dict
         default: {}
