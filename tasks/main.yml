@@ -26,6 +26,8 @@
           community.docker.docker_container:
             name: "{{ frigate_docker_container_name }}"
             state: stopped
+            comparisons:
+              '*': ignore
           when: frigate_container_info.exists
 
         - name: Ensure Frigate storage Docker volume
