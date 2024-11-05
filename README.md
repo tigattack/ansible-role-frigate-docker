@@ -243,6 +243,8 @@ Capabilities to add to the Frigate container, such as [`CAP_PERFMON` for Intel G
 
 Frigate configuration. This dictionary's contents are copied to the Frigate config file. Empty dictionary (no config) by default.
 
+See usage example in playbook examples below.
+
 ## Example Playbooks
 
 **Bare Minimum:**

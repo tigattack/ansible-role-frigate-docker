@@ -51,7 +51,7 @@ frigate_docker_container_network: bridge
 
 # Example:
 # frigate_docker_env_vars:
-#   frigate_docker_RTSP_PASSWORD: "password"
+#   FRIGATE_RTSP_PASSWORD: "password"
 frigate_docker_env_vars: {}
 
 frigate_docker_privileged: false
