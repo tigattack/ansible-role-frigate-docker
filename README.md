@@ -9,6 +9,12 @@ Install the role: `ansible-galaxy role install tigattack.frigate_docker`
 
 See [Example Playbooks](#example-playbooks) below.
 
+## Features
+
+* Configuration validation - The role allows you to define your Frigate config to be added to the deployment. It then uses Frigate to validate your config before applying it to ensure it's valid.
+* Frigate version management - Define the version you'd like to use.
+* Add custom environment variables to Frigate.
+
 ## Prerequisites
 
 * [community.docker](https://galaxy.ansible.com/ui/repo/published/community/docker/) Ansible collection. See [requirements.yml](requirements.yml).
