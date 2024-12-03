@@ -25,5 +25,5 @@
 
     - name: Assert Frigate RTSP port is not exposed
       ansible.builtin.assert:
-        that: not container_info.container.NetworkSettings.Ports['8554/tcp'] == none
+        that: container_info.container.NetworkSettings.Ports['8554/tcp'] == none
         success_msg: Frigate RTSP port is not exposed
