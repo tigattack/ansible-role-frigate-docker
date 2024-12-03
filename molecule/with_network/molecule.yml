@@ -28,3 +28,19 @@ provisioner:
       all:
         project_dir: ${MOLECULE_PROJECT_DIRECTORY}
         frigate_docker_container_network: foo
+        frigate_docker_ports:
+          web_ui:
+            expose: true
+            port: 8971
+          web_ui_unauth:
+            expose: false
+            port: 5000
+          rtsp:
+            expose: false
+            port: 8554
+          webrtc_tcp:
+            expose: true
+            port: 8555
+          webrtc_udp:
+            expose: true
+            port: 8555
