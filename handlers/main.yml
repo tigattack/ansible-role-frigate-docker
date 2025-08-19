@@ -7,4 +7,3 @@
     state: started
     comparisons:
       '*': ignore
-  when: deploy_frigate_container is not changed
