@@ -68,11 +68,6 @@
       - type: tmpfs
         target: "{{ frigate_docker_tmpfs_volume.target }}"
         tmpfs_size: "{{ frigate_docker_tmpfs_volume.size }}"
-    __frigate_docker_container_mount_certs:
-      - type: bind
-        read_only: true
-        source: "{{ frigate_docker_certificate_source }}"
-        target: /etc/letsencrypt/live/frigate
 
 - name: Deploy Frigate container
   community.docker.docker_container:
@@ -92,8 +87,8 @@
     mounts: >-
       {{
         __frigate_docker_container_mounts +
-        __frigate_docker_container_mount_certs
-        if frigate_docker_mount_certificates else
+        frigate_docker_extra_mounts
+        if frigate_docker_extra_mounts else
         __frigate_docker_container_mounts
       }}
     ports: "{{ frigate_docker_ports_configured }}"
