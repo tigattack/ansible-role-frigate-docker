@@ -251,6 +251,16 @@ Frigate configuration. This dictionary's contents are copied to the Frigate conf
 
 See usage example in playbook examples below.
 
+### `frigate_docker_extra_mounts`
+
+| Type         | Default |
+|--------------|---------|
+| `list[dict]` | `[]`    |
+
+A list of extra source/target pairs to also mount into the Frigate instance.
+Empty by default. Note that all entries here must be valid `mounts` entries for
+the [`docker_container` Ansible module](https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-mounts).
+
 ## Example Playbooks
 
 **Bare Minimum:**

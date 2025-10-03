@@ -30,6 +30,14 @@ frigate_docker_shm_size: 64M
 #   - "/dev/dri/renderD128:/dev/dri/renderD128"
 frigate_docker_devices: []
 
+# Allow configuring extra mounts.
+# Example:
+# - source: /host/path
+#   target: /container/path
+#   type: bind
+#   read_only: true
+frigate_docker_extra_mounts: []
+
 frigate_docker_ports:
   web_ui:
     expose: true
