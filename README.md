@@ -251,25 +251,15 @@ Frigate configuration. This dictionary's contents are copied to the Frigate conf
 
 See usage example in playbook examples below.
 
-### `frigate_docker_mount_certificates`
+### `frigate_docker_extra_mounts`
 
-| Type   | Default |
-|--------|---------|
-| bool   | `false` |
+| Type         | Default |
+|--------------|---------|
+| `list[dict]` | `[]`    |
 
-Whether a directory containing certificates should be mounted into the Frigate
-container. See [Frigate's TLS certificate
-documentation](https://docs.frigate.video/configuration/tls/#certificates). If
-true, also set `frigate_docker_certificate_source`.
-
-### `frigate_docker_certificate_source`
-
-| Type   | Default |
-|--------|---------|
-| string | `""`    |
-
-The directory on the server to mount into Frigate for certifates. The directory
-will be mounted to `/etc/letsencrypt/live/frigate` as a read-only volume.
+A list of extra source/target pairs to also mount into the Frigate instance.
+Empty by default. Note that all entries here must be valid `mounts` entries for
+the [`docker_container` Ansible module](https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-mounts).
 
 ## Example Playbooks
 
