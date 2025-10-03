@@ -30,6 +30,9 @@ frigate_docker_shm_size: 64M
 #   - "/dev/dri/renderD128:/dev/dri/renderD128"
 frigate_docker_devices: []
 
+frigate_docker_mount_certificates: false
+frigate_docker_certificate_source: ""
+
 frigate_docker_ports:
   web_ui:
     expose: true
