@@ -69,7 +69,7 @@
     mounts: "{{ frigate_docker_container_mounts }}"
     ports: "{{ frigate_docker_ports_configured }}"
     env: "{{ frigate_docker_env_vars }}"
-    state: healthy
+    state: "{{ frigate_docker_state }}"
   register: deploy_frigate_container
 
 - name: Manage config
