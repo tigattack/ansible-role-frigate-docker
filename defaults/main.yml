@@ -63,6 +63,9 @@ frigate_docker_container_network: bridge
 frigate_docker_env_vars: {}
 
 frigate_docker_privileged: false
+# community.docker 4.7.0 can use the "healthy" state, whereas 3.4.7 need to use "started"
+# Ref: https://github.com/ansible-collections/community.docker/issues/890
+frigate_docker_state: healthy
 
 # Example:
 # frigate_docker_capabilities:
