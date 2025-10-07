@@ -224,3 +224,18 @@ argument_specs:
         description:
           - Frigate configuration.
           - The contents of this variable will be copied into Frigate's config file.
+
+      frigate_docker_extra_mounts:
+        type: list
+        elements: dict
+        default: []
+        description:
+          - A list of extra mounts for the Frigate container.
+          - For valid options, see the 'mounts' parameter of the 'community.docker.docker_container' module.
+
+      frigate_docker_state:
+        type: string
+        default: healthy
+        description:
+          - The desired state of the Frigate container.
+          - For valid options, see the 'state' parameter of the 'community.docker.docker_container' module.

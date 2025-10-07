@@ -257,9 +257,19 @@ See usage example in playbook examples below.
 |--------------|---------|
 | `list[dict]` | `[]`    |
 
-A list of extra source/target pairs to also mount into the Frigate instance.
-Empty by default. Note that all entries here must be valid `mounts` entries for
-the [`docker_container` Ansible module](https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-mounts).
+A list of extra mounts for the Frigate container.
+
+For valid options, see the [`mounts` parameter of the `community.docker.docker_container` module](https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-mounts).
+
+### `frigate_docker_state`
+
+| Type   | Default   |
+|--------|-----------|
+| string | `healthy` |
+
+The desired state of the Frigate container.
+
+For valid options, see the [`state` parameter for the `community.docker.docker_container` module](https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-state).
 
 ## Example Playbooks
 
