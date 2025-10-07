@@ -66,21 +66,7 @@
         if frigate_docker_container_network | string | length > 0
         else omit
       }}
-    mounts:
-      - type: bind
-        read_only: true
-        source: /etc/localtime
-        target: /etc/localtime
-      - type: bind
-        read_only: false
-        source: "{{ frigate_docker_data_bind_path }}"
-        target: /config
-      - type: "{{ 'volume' if frigate_docker_storage_use_docker_volume else 'bind' }}"
-        target: /media/frigate
-        source: "{{ frigate_docker_storage_volume.name if frigate_docker_storage_use_docker_volume else frigate_docker_storage_bind_path }}"
-      - type: tmpfs
-        target: "{{ frigate_docker_tmpfs_volume.target }}"
-        tmpfs_size: "{{ frigate_docker_tmpfs_volume.size }}"
+    mounts: "{{ frigate_docker_container_mounts }}"
     ports: "{{ frigate_docker_ports_configured }}"
     env: "{{ frigate_docker_env_vars }}"
     state: healthy

@@ -8,3 +8,27 @@ frigate_docker_ports_configured: >-
     ([frigate_docker_ports.webrtc_tcp.port ~ ':8555/tcp'] if frigate_docker_ports.webrtc_tcp.expose else []) +
     ([frigate_docker_ports.webrtc_udp.port ~ ':8555/udp'] if frigate_docker_ports.webrtc_udp.expose else [])
   }}
+
+frigate_docker_container_mounts_base:
+  - type: bind
+    read_only: true
+    source: /etc/localtime
+    target: /etc/localtime
+  - type: bind
+    read_only: false
+    source: "{{ frigate_docker_data_bind_path }}"
+    target: /config
+  - type: "{{ 'volume' if frigate_docker_storage_use_docker_volume else 'bind' }}"
+    target: /media/frigate
+    source: "{{ frigate_docker_storage_volume.name if frigate_docker_storage_use_docker_volume else frigate_docker_storage_bind_path }}"
+  - type: tmpfs
+    target: "{{ frigate_docker_tmpfs_volume.target }}"
+    tmpfs_size: "{{ frigate_docker_tmpfs_volume.size }}"
+
+frigate_docker_container_mounts: >-
+  {{
+    frigate_docker_container_mounts_base +
+    frigate_docker_extra_mounts
+    if frigate_docker_extra_mounts | length > 0 else
+    frigate_docker_container_mounts_base
+  }}
