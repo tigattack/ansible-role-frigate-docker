@@ -283,6 +283,28 @@ For valid options, see the [`state` parameter for the `community.docker.docker_c
     - role: tigattack.frigate_docker
 ```
 
+**With TLS certificates:**
+
+This assumes you obtained the certificates on the host, at the source path.
+
+```yml
+---
+- name: Deploy Frigate
+  hosts: server
+  roles:
+    - role: tigattack.frigate_docker
+      vars:
+        frigate_docker_extra_mounts:
+          - target: /etc/letsencrypt/live/frigate/privkey.pem
+            source: /etc/letsencrypt/live/nvr.example.com/nvr.example.com.key
+            type: bind
+            read_only: true
+          - target: /etc/letsencrypt/live/frigate/fullchain.pem
+            source: /etc/letsencrypt/live/nvr.example.com/nvr.example.com.crt
+            type: bind
+            read_only: true
+```
+
 **With a custom storage volume mount:**
 
 ```yml
