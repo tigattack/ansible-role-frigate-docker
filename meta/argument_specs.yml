@@ -234,7 +234,7 @@ argument_specs:
           - For valid options, see the 'mounts' parameter of the 'community.docker.docker_container' module.
 
       frigate_docker_state:
-        type: string
+        type: str
         default: healthy
         description:
           - The desired state of the Frigate container.
