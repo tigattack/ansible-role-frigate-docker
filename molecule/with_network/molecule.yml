@@ -26,7 +26,6 @@ provisioner:
   inventory:
     group_vars:
       all:
-        project_dir: ${MOLECULE_PROJECT_DIRECTORY}
         frigate_docker_container_network: foo
         frigate_docker_ports:
           web_ui:
