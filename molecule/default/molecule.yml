@@ -23,7 +23,3 @@ provisioner:
   playbooks:
     prepare: ../resources/prepare.yml
     converge: ../resources/converge.yml
-  inventory:
-    group_vars:
-      all:
-        project_dir: ${MOLECULE_PROJECT_DIRECTORY}

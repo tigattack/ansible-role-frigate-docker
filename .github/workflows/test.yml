@@ -2,13 +2,18 @@
 name: Test
 on:
   push:
-    branches: '*'
+    branches: [main]
     tags-ignore:
       - '**'
   schedule:
     - cron: "0 5 * * 1"
+  pull_request:
   workflow_dispatch:
   workflow_call:
+    outputs:
+      role_name:
+        description: 'Ansible role name'
+        value: ${{ jobs.role_name.outputs.role_name }}
 
 jobs:
   lint:
@@ -21,23 +26,53 @@ jobs:
           requirements_file: requirements.yml
           args: "--exclude molecule"
 
-  test:
+  role_name:
     runs-on: ubuntu-latest
-
+    outputs:
+      role_name: ${{ steps.get_role_name.outputs.role_name }}
     steps:
       - uses: actions/checkout@v5
 
-      - name: Setup Python 3.x
-        uses: actions/setup-python@v6
+      - id: get_role_name
+        run: |
+          namespace=`yq eval '.galaxy_info.namespace' meta/main.yml`
+          role_name=`yq eval '.galaxy_info.role_name' meta/main.yml`
+          echo "role_name=${namespace}.${role_name}" | tee -a $GITHUB_OUTPUT
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [role_name]
+    defaults:
+      run:
+        working-directory: ${{ needs.role_name.outputs.role_name }}
+    steps:
+      - uses: actions/checkout@v5
         with:
-          python-version: '3.x'
+          path: ${{ needs.role_name.outputs.role_name }}
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.ansible/roles
+            ~/.ansible/collections
+          key: >-
+            ${{ runner.os }}-ansible-deps-${{
+              hashFiles(
+                format('{0}/requirements.yml', needs.role_name.outputs.role_name),
+                format('{0}/molecule/resources/requirements.yml', needs.role_name.outputs.role_name)
+              )
+            }}
+
+      - uses: actions/setup-python@v6
+        with:
+          # TODO: switch back to 3.x when Ansible 2.20 is out
+          # RuntimeError: Python 3.14 requires ansible-core version >= 2.20.0, and we found 2.19.3.
+          python-version: '3.13'
           cache: 'pip'
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - run: pip install -r requirements.txt
 
-      - name: Run molecule tests
-        run: molecule -v test --all
+      - run: molecule -v test --all
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
