@@ -92,17 +92,20 @@
       ansible.builtin.wait_for:
         path: "{{ frigate_docker_config_path_host }}"
 
-    - name: Get Frigate config
-      ansible.builtin.slurp:
-        path: "{{ frigate_docker_config_path_host }}"
-      register: current_frigate_config
-      when: frigate_docker_config.version is not defined or frigate_docker_config.version|length == 0
+    - name: Fetch Frigate version
+      when: >-
+        frigate_docker_config.version is not defined or
+        frigate_docker_config.version | length == 0
+      block:
+        - name: Get Frigate config
+          ansible.builtin.slurp:
+            path: "{{ frigate_docker_config_path_host }}"
+          register: current_frigate_config
 
-    - name: Parse version from config
-      ansible.builtin.set_fact:
-        frigate_config_version: >-
-          {{ (current_frigate_config.content | b64decode | from_yaml).version }}
-      when: frigate_docker_config.version is not defined or frigate_docker_config.version|length == 0
+        - name: Parse version from config
+          ansible.builtin.set_fact:
+            frigate_docker_config_version: >-
+              {{ (current_frigate_config.content | b64decode | from_yaml).version }}
 
     - name: Template Frigate config
       ansible.builtin.template:
