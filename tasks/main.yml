@@ -90,11 +90,11 @@
   block:
     - name: Wait for config file
       ansible.builtin.wait_for:
-        path: "{{ frigate_docker_data_bind_path }}/config.yaml"
+        path: "{{ frigate_docker_config_path_host }}"
 
     - name: Get Frigate config
       ansible.builtin.slurp:
-        path: "{{ frigate_docker_data_bind_path }}/config.yaml"
+        path: "{{ frigate_docker_config_path_host }}"
       register: current_frigate_config
       when: frigate_docker_config.version is not defined or frigate_docker_config.version|length == 0
 
@@ -107,7 +107,7 @@
     - name: Template Frigate config
       ansible.builtin.template:
         src: frigate_config.yml.j2
-        dest: "{{ frigate_docker_data_bind_path }}/config.yaml"
+        dest: "{{ frigate_docker_config_path_host }}"
         owner: root
         group: root
         mode: '0644'

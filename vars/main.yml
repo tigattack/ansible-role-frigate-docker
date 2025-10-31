@@ -42,3 +42,6 @@ frigate_docker_dirs: >-
       else []
     )
   }}
+
+# Path to the Frigate config file on the host
+frigate_docker_config_path_host: "{{ [frigate_docker_data_bind_path, 'config.yaml'] | path_join }}"
