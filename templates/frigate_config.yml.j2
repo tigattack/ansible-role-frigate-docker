@@ -1,5 +1,7 @@
 {{ ansible_managed | comment }}
 
-version: {{ frigate_app_version }}
+{% if frigate_docker_config.version is not defined or frigate_docker_config.version|length == 0 %}
+version: {{ frigate_config_version }}
+{% endif %}
 
 {{ frigate_docker_config | to_nice_yaml(sort_keys=false, indent=2) }}

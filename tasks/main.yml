@@ -51,6 +51,14 @@
         state: present
       when: not docker_network_check.exists
 
+- name: Ensuring required directories exist on the host
+  ansible.builtin.file:
+    state: directory
+    path: "{{item}}"
+  with_items:
+    - "{{ frigate_docker_data_bind_path }}"
+    - "{{ frigate_docker_storage_bind_path }}"
+
 - name: Deploy Frigate container
   community.docker.docker_container:
     name: "{{ frigate_docker_container_name }}"
@@ -78,15 +86,21 @@
     - frigate_docker_config != {}
     - frigate_docker_config is not none
   block:
+    - name: Wait for config file
+      ansible.builtin.wait_for:
+        path: "{{ frigate_docker_data_bind_path }}/config.yaml"
+
     - name: Get Frigate config
       ansible.builtin.slurp:
         path: "{{ frigate_docker_data_bind_path }}/config.yaml"
       register: current_frigate_config
+      when: frigate_docker_config.version is not defined or frigate_docker_config.version|length == 0
 
     - name: Parse version from config
       ansible.builtin.set_fact:
         frigate_config_version: >-
           {{ (current_frigate_config.content | b64decode | from_yaml).version }}
+      when: frigate_docker_config.version is not defined or frigate_docker_config.version|length == 0
 
     - name: Template Frigate config
       ansible.builtin.template:
@@ -103,6 +117,4 @@
             ghcr.io/blakeblackshear/frigate:{{ frigate_docker_version }}
             -u -m frigate
             --validate-config
-      vars:
-        frigate_app_version: "{{ frigate_config_version }}"
       notify: Restart Frigate
