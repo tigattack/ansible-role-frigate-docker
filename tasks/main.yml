@@ -58,9 +58,8 @@
     group: root
     mode: '0755'
     state: directory
-  with_items:
-    - "{{ frigate_docker_data_bind_path }}"
-    - "{{ frigate_docker_storage_bind_path }}"
+  become: true
+  loop: "{{ frigate_docker_dirs }}"
 
 - name: Deploy Frigate container
   community.docker.docker_container:
