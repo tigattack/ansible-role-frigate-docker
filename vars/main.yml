@@ -32,3 +32,16 @@ frigate_docker_container_mounts: >-
     if frigate_docker_extra_mounts | length > 0 else
     frigate_docker_container_mounts_base
   }}
+
+# Directories that must exist on the host for bind mounts
+frigate_docker_dirs: >-
+  {{
+    [frigate_docker_data_bind_path] +
+    (
+      [frigate_docker_storage_bind_path] if not frigate_docker_storage_use_docker_volume
+      else []
+    )
+  }}
+
+# Path to the Frigate config file on the host
+frigate_docker_config_path_host: "{{ [frigate_docker_data_bind_path, 'config.yaml'] | path_join }}"
