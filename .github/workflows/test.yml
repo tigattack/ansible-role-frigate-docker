@@ -39,9 +39,34 @@ jobs:
           role_name=`yq eval '.galaxy_info.role_name' meta/main.yml`
           echo "role_name=${namespace}.${role_name}" | tee -a $GITHUB_OUTPUT
 
+  gather_tests:
+    runs-on: ubuntu-latest
+    outputs:
+      tests: ${{ steps.tests.outputs.tests }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            molecule
+
+      - name: Get Molecule tests
+        id: tests
+        run: |
+          tests=$(
+            find molecule -type d -maxdepth 1 -mindepth 1 -not -name 'resources' | \
+            sed 's/molecule\///' | \
+            sort | \
+            jq -R -s -c 'split("\n") | map(select(length > 0))'
+          )
+          echo "tests=$tests" | tee -a $GITHUB_OUTPUT
+
   test:
     runs-on: ubuntu-latest
-    needs: [role_name]
+    needs: [gather_tests, role_name]
+    strategy:
+      fail-fast: false
+      matrix:
+        test: ${{ fromJSON(needs.gather_tests.outputs.tests) }}
     defaults:
       run:
         working-directory: ${{ needs.role_name.outputs.role_name }}
@@ -72,7 +97,7 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      - run: molecule -v test --all
+      - run: molecule -v test -s ${{ matrix.test }}
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
