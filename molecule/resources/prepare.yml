@@ -2,7 +2,7 @@
 - name: Prepare
   hosts: all
   pre_tasks:
-    - name: Wait for systemd to complete initialization.  # noqa command-instead-of-module
+    - name: Wait for systemd to complete initialisation  # noqa command-instead-of-module
       ansible.builtin.command: systemctl is-system-running
       register: systemctl_status
       until: >
@@ -10,13 +10,20 @@
         'degraded' in systemctl_status.stdout
       retries: 30
       delay: 5
-      when: ansible_service_mgr == 'systemd'
+      when: ansible_facts.service_mgr == 'systemd'
       changed_when: false
       failed_when: systemctl_status.rc > 1
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+      when: ansible_facts.os_family == 'Debian'
 
   roles:
     - role: geerlingguy.pip
       vars:
+        # Workaround - Pending https://github.com/geerlingguy/ansible-role-pip/pull/71
+        ansible_python: "{{ ansible_facts.python }}"
         pip_install_packages:
           - name: docker
 
