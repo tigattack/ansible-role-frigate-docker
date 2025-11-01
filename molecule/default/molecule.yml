@@ -22,10 +22,7 @@ ansible:
   playbooks:
     prepare: ../resources/prepare.yml
     converge: ../resources/converge.yml
-
-provisioner:
-  name: ansible
-  config_options:
+  cfg:
     defaults:
       inject_facts_as_vars: false
 
