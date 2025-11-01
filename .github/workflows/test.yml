@@ -75,6 +75,8 @@ jobs:
         with:
           path: ${{ needs.role_name.outputs.role_name }}
 
+      - run: bash .github/free_space.sh
+
       - uses: actions/cache@v4
         with:
           path: |
