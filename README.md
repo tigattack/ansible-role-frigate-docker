@@ -15,10 +15,10 @@ See [Example Playbooks](#example-playbooks) below.
 * Frigate version management - Define the version you'd like to use.
 * Add custom environment variables to Frigate.
 
-## Prerequisites
+## Requirements
 
-* [community.docker](https://galaxy.ansible.com/ui/repo/published/community/docker/) Ansible collection. See [requirements.yml](requirements.yml).
-* Docker. I recommend the [geerlingguy.docker](https://github.com/geerlingguy/ansible-role-docker) role.
+* [community.docker](https://galaxy.ansible.com/ui/repo/published/community/docker/) Ansible collection (version >=4.0.0).
+* Docker. The [geerlingguy.docker](https://github.com/geerlingguy/ansible-role-docker) role is recommended.
 * A chosen data path on the host (this is only used to store the generated htpasswd file).
 * A chosen path or Docker volume configuration (e.g. for a CIFS/NFS share) for camera recordings.
 
