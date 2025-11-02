@@ -22,8 +22,6 @@
   roles:
     - role: geerlingguy.pip
       vars:
-        # Workaround - Pending https://github.com/geerlingguy/ansible-role-pip/pull/71
-        ansible_python: "{{ ansible_facts.python }}"
         pip_install_packages:
           - name: docker
 
