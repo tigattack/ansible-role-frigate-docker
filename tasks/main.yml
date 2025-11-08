@@ -95,7 +95,7 @@
     - name: Fetch Frigate version
       when: >-
         frigate_docker_config.version is not defined or
-        frigate_docker_config.version | length == 0
+        frigate_docker_config.version | string | length == 0
       block:
         - name: Get Frigate config
           ansible.builtin.slurp:

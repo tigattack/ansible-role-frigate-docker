@@ -1,5 +1,5 @@
 {{ ansible_managed | comment }}
-{% if frigate_docker_config_version is defined and frigate_docker_config_version | length > 0 %}
+{% if frigate_docker_config_version is defined and frigate_docker_config_version | string | length > 0 %}
 
 version: {{ frigate_docker_config_version }}
 {% endif %}
