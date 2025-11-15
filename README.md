@@ -168,6 +168,10 @@ Device paths to bind to the Frigate container (for example a GPU or TPU).
 
 Allow Frigate container to use NVIDIA GPU.
 
+> [!WARNING]
+> This requires NVIDIA drivers and the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) on the host system.
+> More information can be found in the [Frigate documentation](https://docs.frigate.video/configuration/hardware_acceleration_video#nvidia-gpus).
+
 ### `frigate_docker_ports`
 
 | Type                              | Default   |
