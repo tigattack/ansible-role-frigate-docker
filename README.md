@@ -160,6 +160,14 @@ Frigate `shm` size. See [Frigate shm size requirements](https://docs.frigate.vid
 
 Device paths to bind to the Frigate container (for example a GPU or TPU).
 
+### `frigate_docker_use_nvidia_gpu`
+
+| Type | Default |
+|------|---------|
+| bool | `false` |
+
+Allow Frigate container to use NVIDIA GPU.
+
 ### `frigate_docker_ports`
 
 | Type                              | Default   |

@@ -30,6 +30,9 @@ frigate_docker_shm_size: 64M
 #   - "/dev/dri/renderD128:/dev/dri/renderD128"
 frigate_docker_devices: []
 
+# Allow Frigate container to use NVIDIA GPU.
+frigate_docker_use_nvidia_gpu: false
+
 # Allow configuring extra mounts.
 # Example:
 # - source: /host/path

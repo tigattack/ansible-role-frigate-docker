@@ -62,25 +62,7 @@
   loop: "{{ frigate_docker_dirs }}"
 
 - name: Deploy Frigate container
-  community.docker.docker_container:
-    name: "{{ frigate_docker_container_name }}"
-    image: ghcr.io/blakeblackshear/frigate:{{ frigate_docker_version }}
-    restart_policy: unless-stopped
-    privileged: "{{ frigate_docker_privileged }}"
-    capabilities: "{{ frigate_docker_capabilities }}"
-    shm_size: "{{ frigate_docker_shm_size }}"
-    devices: "{{ frigate_docker_devices }}"
-    networks: >-
-      {{
-        [{'name': frigate_docker_container_network}]
-        if frigate_docker_container_network | string | length > 0
-        else omit
-      }}
-    mounts: "{{ frigate_docker_container_mounts }}"
-    ports: "{{ frigate_docker_ports_configured }}"
-    env: "{{ frigate_docker_env_vars }}"
-    state: "{{ frigate_docker_state }}"
-  register: deploy_frigate_container
+  community.docker.docker_container: "{{ frigate_docker_container }}"
 
 - name: Manage config
   when:
