@@ -104,6 +104,15 @@ argument_specs:
         default: []
         description: Device paths to bind to the Frigate container.
 
+      frigate_docker_use_nvidia_gpu:
+        type: bool
+        default: false
+        description:
+          - Allow Frigate container to use NVIDIA GPU.
+          - This requires NVIDIA drivers and the NVIDIA Container Toolkit on the host system.
+          - "More information can be found in the Frigate documentation:
+            https://docs.frigate.video/configuration/hardware_acceleration_video#nvidia-gpus"
+
       frigate_docker_ports:
         type: dict
         required: false

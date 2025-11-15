@@ -45,3 +45,36 @@ frigate_docker_dirs: >-
 
 # Path to the Frigate config file on the host
 frigate_docker_config_path_host: "{{ [frigate_docker_data_bind_path, 'config.yaml'] | path_join }}"
+
+frigate_docker_extra_nvidia:
+  device_requests:
+    - driver: nvidia
+      count: 1
+      capabilities: [gpu]
+
+frigate_docker_container_base:
+  name: "{{ frigate_docker_container_name }}"
+  image: ghcr.io/blakeblackshear/frigate:{{ frigate_docker_version }}
+  restart_policy: unless-stopped
+  privileged: "{{ frigate_docker_privileged }}"
+  capabilities: "{{ frigate_docker_capabilities }}"
+  shm_size: "{{ frigate_docker_shm_size }}"
+  devices: "{{ frigate_docker_devices }}"
+  networks: >-
+    {{
+      [{'name': frigate_docker_container_network}]
+      if frigate_docker_container_network | string | length > 0
+      else omit
+    }}
+  mounts: "{{ frigate_docker_container_mounts }}"
+  ports: "{{ frigate_docker_ports_configured }}"
+  env: "{{ frigate_docker_env_vars }}"
+  state: "{{ frigate_docker_state }}"
+
+frigate_docker_container: >-
+  {{
+    frigate_docker_container_base | combine(
+      frigate_docker_extra_nvidia if frigate_docker_use_nvidia_gpu
+      else {}
+    )
+  }}
