@@ -61,7 +61,7 @@
   become: true
   loop: "{{ frigate_docker_dirs }}"
 
-- name: Deploy Frigate container
+- name: Deploy Frigate container # noqa args[module]
   community.docker.docker_container: "{{ frigate_docker_container }}"
 
 - name: Manage config
