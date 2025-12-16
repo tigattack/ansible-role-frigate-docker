@@ -99,6 +99,9 @@
         validate: >-
           docker run
             --rm
+            {% for env_var, value in frigate_docker_env_vars.items() %}
+            -e {{ env_var }}={{ value }}
+            {% endfor %}
             -v %s:/config/config.yml
             --entrypoint python3
             ghcr.io/blakeblackshear/frigate:{{ frigate_docker_version }}
