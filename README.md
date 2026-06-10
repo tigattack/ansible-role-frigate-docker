@@ -219,6 +219,16 @@ frigate_docker_ports:
     port: 8555
 ```
 
+### `frigate_docker_default_host_ip`
+
+| Type   | Default   |
+|--------|-----------|
+| string | `0.0.0.0` |
+
+Default host IP address to use; see
+https://docs.ansible.com/projects/ansible/latest/collections/community/docker/docker_container_module.html#parameter-default_host_ip
+for an explanation of various values for this.
+
 ### `frigate_docker_container_network`
 
 | Type   | Default   |
