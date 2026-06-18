@@ -225,9 +225,12 @@ frigate_docker_ports:
 |--------|-----------|
 | string | `0.0.0.0` |
 
-Default host IP address to use; see
-https://docs.ansible.com/projects/ansible/latest/collections/community/docker/docker_container_module.html#parameter-default_host_ip
-for an explanation of various values for this.
+Default host IP address to use.
+
+For usage information, see the [`default_host_ip` parameter of the `community.docker.docker_container` module](https://docs.ansible.com/projects/ansible/latest/collections/community/docker/docker_container_module.html#parameter-default_host_ip).
+
+> [!NOTE]
+> This is an advanced option and is unlikely to be needed for most users except those using IPv6 or with complex host network configurations.
 
 ### `frigate_docker_container_network`
 
