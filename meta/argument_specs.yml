@@ -204,6 +204,13 @@ argument_specs:
                 default: 8556
                 description: Frigate WebRTC UDP port.
 
+      frigate_docker_default_host_ip:
+        type: str
+        default: 0.0.0.0
+        description:
+          - Default host IP address to use for the container network.
+          - See the O(default_host_ip) parameter of M(community.docker.docker_container).
+
       frigate_docker_container_network:
         type: str
         default: bridge
